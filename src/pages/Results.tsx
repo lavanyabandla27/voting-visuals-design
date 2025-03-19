@@ -9,7 +9,7 @@ import {
   Map as MapIcon,
   PieChart,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import ElectionMap from "@/components/ui-custom/ElectionMap";
@@ -35,9 +35,292 @@ const partyColors = {
   Others: "#8d99ae",
 };
 
+// Mock state-specific election data
+const stateElectionData = {
+  all: {
+    turnout: 67.2,
+    turnoutChange: 2.4,
+    seatsDeclared: 543,
+    totalSeats: 543,
+    voteShare: {
+      PartyA: 37,
+      PartyB: 29,
+      PartyC: 18,
+      PartyD: 9,
+      Others: 7,
+    },
+    partyResults: [
+      { party: "PartyA", seatsWon: 200, voteShare: 37, change: 3 },
+      { party: "PartyB", seatsWon: 155, voteShare: 29, change: -2 },
+      { party: "PartyC", seatsWon: 95, voteShare: 18, change: 5 },
+      { party: "PartyD", seatsWon: 45, voteShare: 9, change: -4 },
+      { party: "Others", seatsWon: 48, voteShare: 7, change: -2 },
+    ],
+  },
+  ap: {
+    turnout: 79.8,
+    turnoutChange: 3.6,
+    seatsDeclared: 25,
+    totalSeats: 25,
+    voteShare: {
+      PartyA: 22,
+      PartyB: 48,
+      PartyC: 15,
+      PartyD: 10,
+      Others: 5,
+    },
+    partyResults: [
+      { party: "PartyA", seatsWon: 5, voteShare: 22, change: -3 },
+      { party: "PartyB", seatsWon: 14, voteShare: 48, change: 6 },
+      { party: "PartyC", seatsWon: 4, voteShare: 15, change: 1 },
+      { party: "PartyD", seatsWon: 2, voteShare: 10, change: -2 },
+      { party: "Others", seatsWon: 0, voteShare: 5, change: -2 },
+    ],
+  },
+  ar: {
+    turnout: 71.2,
+    turnoutChange: 1.2,
+    seatsDeclared: 2,
+    totalSeats: 2,
+    voteShare: {
+      PartyA: 55,
+      PartyB: 15,
+      PartyC: 20,
+      PartyD: 8,
+      Others: 2,
+    },
+    partyResults: [
+      { party: "PartyA", seatsWon: 2, voteShare: 55, change: 1 },
+      { party: "PartyB", seatsWon: 0, voteShare: 15, change: 0 },
+      { party: "PartyC", seatsWon: 0, voteShare: 20, change: -1 },
+      { party: "PartyD", seatsWon: 0, voteShare: 8, change: 0 },
+      { party: "Others", seatsWon: 0, voteShare: 2, change: 0 },
+    ],
+  },
+  as: {
+    turnout: 82.5,
+    turnoutChange: 5.7,
+    seatsDeclared: 14,
+    totalSeats: 14,
+    voteShare: {
+      PartyA: 42,
+      PartyB: 33,
+      PartyC: 12,
+      PartyD: 5,
+      Others: 8,
+    },
+    partyResults: [
+      { party: "PartyA", seatsWon: 8, voteShare: 42, change: 2 },
+      { party: "PartyB", seatsWon: 4, voteShare: 33, change: -1 },
+      { party: "PartyC", seatsWon: 1, voteShare: 12, change: -1 },
+      { party: "PartyD", seatsWon: 0, voteShare: 5, change: 0 },
+      { party: "Others", seatsWon: 1, voteShare: 8, change: 0 },
+    ],
+  },
+  br: {
+    turnout: 62.9,
+    turnoutChange: -1.8,
+    seatsDeclared: 40,
+    totalSeats: 40,
+    voteShare: {
+      PartyA: 38,
+      PartyB: 36,
+      PartyC: 12,
+      PartyD: 8,
+      Others: 6,
+    },
+    partyResults: [
+      { party: "PartyA", seatsWon: 18, voteShare: 38, change: -2 },
+      { party: "PartyB", seatsWon: 16, voteShare: 36, change: 3 },
+      { party: "PartyC", seatsWon: 3, voteShare: 12, change: -1 },
+      { party: "PartyD", seatsWon: 2, voteShare: 8, change: 0 },
+      { party: "Others", seatsWon: 1, voteShare: 6, change: 0 },
+    ],
+  },
+};
+
+// Mock constituency data by state
+const constituencyData = {
+  all: [
+    {
+      constituency: "New Delhi",
+      state: "Delhi",
+      party: "PartyA",
+      margin: "125,750",
+      turnout: "62.5%",
+    },
+    {
+      constituency: "Mumbai North",
+      state: "Maharashtra",
+      party: "PartyB",
+      margin: "98,346",
+      turnout: "56.7%",
+    },
+    {
+      constituency: "Chennai Central",
+      state: "Tamil Nadu",
+      party: "PartyC",
+      margin: "112,982",
+      turnout: "59.8%",
+    },
+    {
+      constituency: "Kolkata North",
+      state: "West Bengal",
+      party: "PartyA",
+      margin: "75,639",
+      turnout: "72.3%",
+    },
+    {
+      constituency: "Hyderabad",
+      state: "Telangana",
+      party: "PartyD",
+      margin: "44,463",
+      turnout: "53.9%",
+    },
+  ],
+  ap: [
+    {
+      constituency: "Vijayawada",
+      state: "Andhra Pradesh",
+      party: "PartyB",
+      margin: "87,321",
+      turnout: "78.2%",
+    },
+    {
+      constituency: "Guntur",
+      state: "Andhra Pradesh",
+      party: "PartyB",
+      margin: "64,532",
+      turnout: "76.5%",
+    },
+    {
+      constituency: "Visakhapatnam",
+      state: "Andhra Pradesh",
+      party: "PartyA",
+      margin: "32,145",
+      turnout: "81.3%",
+    },
+    {
+      constituency: "Rajahmundry",
+      state: "Andhra Pradesh",
+      party: "PartyB",
+      margin: "52,876",
+      turnout: "79.8%",
+    },
+    {
+      constituency: "Tirupati",
+      state: "Andhra Pradesh",
+      party: "PartyC",
+      margin: "43,257",
+      turnout: "82.1%",
+    },
+  ],
+  ar: [
+    {
+      constituency: "Arunachal West",
+      state: "Arunachal Pradesh",
+      party: "PartyA",
+      margin: "24,657",
+      turnout: "71.5%",
+    },
+    {
+      constituency: "Arunachal East",
+      state: "Arunachal Pradesh",
+      party: "PartyA",
+      margin: "19,834",
+      turnout: "70.9%",
+    },
+  ],
+  as: [
+    {
+      constituency: "Guwahati",
+      state: "Assam",
+      party: "PartyA",
+      margin: "45,632",
+      turnout: "83.2%",
+    },
+    {
+      constituency: "Dibrugarh",
+      state: "Assam",
+      party: "PartyA",
+      margin: "37,984",
+      turnout: "84.5%",
+    },
+    {
+      constituency: "Silchar",
+      state: "Assam",
+      party: "PartyB",
+      margin: "28,765",
+      turnout: "80.7%",
+    },
+    {
+      constituency: "Jorhat",
+      state: "Assam",
+      party: "PartyA",
+      margin: "31,492",
+      turnout: "82.1%",
+    },
+    {
+      constituency: "Tezpur",
+      state: "Assam",
+      party: "PartyB",
+      margin: "22,354",
+      turnout: "81.9%",
+    },
+  ],
+  br: [
+    {
+      constituency: "Patna Sahib",
+      state: "Bihar",
+      party: "PartyA",
+      margin: "67,243",
+      turnout: "64.3%",
+    },
+    {
+      constituency: "Muzaffarpur",
+      state: "Bihar",
+      party: "PartyB",
+      margin: "54,321",
+      turnout: "62.7%",
+    },
+    {
+      constituency: "Gaya",
+      state: "Bihar",
+      party: "PartyB",
+      margin: "48,765",
+      turnout: "59.8%",
+    },
+    {
+      constituency: "Darbhanga",
+      state: "Bihar",
+      party: "PartyA",
+      margin: "41,296",
+      turnout: "63.5%",
+    },
+    {
+      constituency: "Purnia",
+      state: "Bihar",
+      party: "PartyC",
+      margin: "35,872",
+      turnout: "64.2%",
+    },
+  ],
+};
+
 const Results = () => {
   const [selectedState, setSelectedState] = useState<string>("all");
   const [selectedYear, setSelectedYear] = useState<string>("2024");
+  const [currentData, setCurrentData] = useState(stateElectionData.all);
+  const [currentConstituencyData, setCurrentConstituencyData] = useState(constituencyData.all);
+
+  // Update data when state selection changes
+  useEffect(() => {
+    const stateData = stateElectionData[selectedState as keyof typeof stateElectionData] || stateElectionData.all;
+    const stateConstituencyData = constituencyData[selectedState as keyof typeof constituencyData] || constituencyData.all;
+    
+    setCurrentData(stateData);
+    setCurrentConstituencyData(stateConstituencyData);
+  }, [selectedState]);
 
   const states = [
     { value: "all", label: "All States" },
@@ -66,6 +349,8 @@ const Results = () => {
           setSelectedYear={setSelectedYear}
           states={states}
           years={years}
+          currentData={currentData}
+          currentConstituencyData={currentConstituencyData}
         />
         <MapSection />
         <TrendsSection />
@@ -133,6 +418,8 @@ interface ResultsSectionProps {
   setSelectedYear: (year: string) => void;
   states: { value: string; label: string }[];
   years: { value: string; label: string }[];
+  currentData: any;
+  currentConstituencyData: any[];
 }
 
 const ResultsSection = ({
@@ -142,12 +429,19 @@ const ResultsSection = ({
   setSelectedYear,
   states,
   years,
+  currentData,
+  currentConstituencyData,
 }: ResultsSectionProps) => {
   return (
     <InfoSection>
       <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <h2 className="text-2xl md:text-3xl font-semibold">
           {selectedYear} Election Results
+          {selectedState !== "all" && (
+            <span className="ml-2 text-primary">
+              - {states.find(s => s.value === selectedState)?.label}
+            </span>
+          )}
         </h2>
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-3">
@@ -193,32 +487,32 @@ const ResultsSection = ({
         <GlassCard>
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-medium">Overall Turnout</h3>
-            <span className="text-2xl font-semibold">67.2%</span>
+            <span className="text-2xl font-semibold">{currentData.turnout}%</span>
           </div>
           <div className="h-4 bg-secondary rounded-full mt-4 overflow-hidden">
             <div
               className="h-full bg-primary rounded-full"
-              style={{ width: "67.2%" }}
+              style={{ width: `${currentData.turnout}%` }}
             />
           </div>
           <p className="text-sm text-muted-foreground mt-2">
-            +2.4% compared to 2019
+            {currentData.turnoutChange > 0 ? "+" : ""}{currentData.turnoutChange}% compared to 2019
           </p>
         </GlassCard>
 
         <GlassCard delayMultiplier={1}>
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-medium">Seats Declared</h3>
-            <span className="text-2xl font-semibold">543/543</span>
+            <span className="text-2xl font-semibold">{currentData.seatsDeclared}/{currentData.totalSeats}</span>
           </div>
           <div className="h-4 bg-secondary rounded-full mt-4 overflow-hidden">
             <div
               className="h-full bg-primary rounded-full"
-              style={{ width: "100%" }}
+              style={{ width: `${(currentData.seatsDeclared / currentData.totalSeats) * 100}%` }}
             />
           </div>
           <p className="text-sm text-muted-foreground mt-2">
-            100% results declared
+            {Math.round((currentData.seatsDeclared / currentData.totalSeats) * 100)}% results declared
           </p>
         </GlassCard>
 
@@ -236,9 +530,9 @@ const ResultsSection = ({
             ))}
           </div>
           <div className="flex justify-between text-sm text-muted-foreground mt-2">
-            <span>PartyA: 37%</span>
-            <span>PartyB: 29%</span>
-            <span>Others: 34%</span>
+            <span>PartyA: {currentData.voteShare.PartyA}%</span>
+            <span>PartyB: {currentData.voteShare.PartyB}%</span>
+            <span>Others: {currentData.voteShare.PartyC + currentData.voteShare.PartyD + currentData.voteShare.Others}%</span>
           </div>
         </GlassCard>
       </div>
@@ -261,31 +555,32 @@ const ResultsSection = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {Object.entries(partyColors).map(([party, color], i) => (
-                    <tr key={party} className="border-b border-border/50">
+                  {currentData.partyResults.map((result: any) => (
+                    <tr key={result.party} className="border-b border-border/50">
                       <td className="py-3 px-4 flex items-center gap-2">
                         <div
                           className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: color }}
+                          style={{ backgroundColor: partyColors[result.party as keyof typeof partyColors] }}
                         />
-                        {party}
+                        {result.party}
                       </td>
                       <td className="text-center py-3 px-4">
-                        {200 - i * 45 > 0 ? 200 - i * 45 : 15}
+                        {result.seatsWon}
                       </td>
                       <td className="text-center py-3 px-4">
-                        {40 - i * 8 > 0 ? 40 - i * 8 : 5}%
+                        {result.voteShare}%
                       </td>
                       <td className="text-center py-3 px-4">
                         <span
                           className={cn(
-                            i % 2 === 0
+                            result.change > 0
                               ? "text-green-600"
-                              : "text-red-600"
+                              : result.change < 0
+                              ? "text-red-600"
+                              : "text-gray-600"
                           )}
                         >
-                          {i % 2 === 0 ? "+" : "-"}
-                          {3 + i}%
+                          {result.change > 0 ? "+" : ""}{result.change}%
                         </span>
                       </td>
                     </tr>
@@ -309,43 +604,7 @@ const ResultsSection = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {[
-                    {
-                      constituency: "New Delhi",
-                      state: "Delhi",
-                      party: "PartyA",
-                      margin: "125,750",
-                      turnout: "62.5%",
-                    },
-                    {
-                      constituency: "Mumbai North",
-                      state: "Maharashtra",
-                      party: "PartyB",
-                      margin: "98,346",
-                      turnout: "56.7%",
-                    },
-                    {
-                      constituency: "Chennai Central",
-                      state: "Tamil Nadu",
-                      party: "PartyC",
-                      margin: "112,982",
-                      turnout: "59.8%",
-                    },
-                    {
-                      constituency: "Kolkata North",
-                      state: "West Bengal",
-                      party: "PartyA",
-                      margin: "75,639",
-                      turnout: "72.3%",
-                    },
-                    {
-                      constituency: "Hyderabad",
-                      state: "Telangana",
-                      party: "PartyD",
-                      margin: "44,463",
-                      turnout: "53.9%",
-                    },
-                  ].map((item, i) => (
+                  {currentConstituencyData.map((item, i) => (
                     <tr key={i} className="border-b border-border/50">
                       <td className="py-3 px-4">{item.constituency}</td>
                       <td className="py-3 px-4">{item.state}</td>
