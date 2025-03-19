@@ -7,6 +7,10 @@ import PageTransition from "@/components/transitions/PageTransition";
 import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, MapPin, FileCheck, HelpCircle } from "lucide-react";
+import { VoterRegistration } from "@/components/voter-services/VoterRegistration";
+import { PollingStation } from "@/components/voter-services/PollingStation";
+import { ElectoralRoll } from "@/components/voter-services/ElectoralRoll";
+import { FAQs } from "@/components/voter-services/FAQs";
 
 const VoterServices = () => {
   const location = useLocation();
@@ -16,25 +20,25 @@ const VoterServices = () => {
       title: "Voter Registration",
       description: "Register to vote or update your existing registration details.",
       icon: <CheckCircle className="h-8 w-8 text-primary" />,
-      action: "Register Now"
+      action: <VoterRegistration />
     },
     {
       title: "Find Polling Station",
       description: "Locate your designated polling station for upcoming elections.",
       icon: <MapPin className="h-8 w-8 text-primary" />,
-      action: "Find Location"
+      action: <PollingStation />
     },
     {
       title: "Electoral Roll",
       description: "Check if your name appears on the electoral roll.",
       icon: <FileCheck className="h-8 w-8 text-primary" />,
-      action: "Check Status"
+      action: <ElectoralRoll />
     },
     {
       title: "Frequently Asked Questions",
       description: "Find answers to common questions about voting and elections.",
       icon: <HelpCircle className="h-8 w-8 text-primary" />,
-      action: "View FAQs"
+      action: <FAQs />
     }
   ];
 
@@ -69,7 +73,7 @@ const VoterServices = () => {
                     <div className="mb-4">{service.icon}</div>
                     <h2 className="text-xl font-semibold mb-2">{service.title}</h2>
                     <p className="text-muted-foreground mb-6 flex-grow">{service.description}</p>
-                    <Button className="w-full">{service.action}</Button>
+                    {service.action}
                   </div>
                 </GlassCard>
               </motion.div>
