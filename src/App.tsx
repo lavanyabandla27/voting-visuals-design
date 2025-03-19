@@ -10,6 +10,9 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Results from "./pages/Results";
 import NotFound from "./pages/NotFound";
+import VoterServices from "./pages/VoterServices";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +25,9 @@ const AppRoutes = () => {
         <Route path="/" element={<Index />} />
         <Route path="/login" element={<Login />} />
         <Route path="/results" element={<Results />} />
+        <Route path="/voter-services" element={<VoterServices />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
