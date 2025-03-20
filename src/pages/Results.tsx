@@ -56,6 +56,7 @@ const historicalTurnoutData = [
   { year: "2009", turnout: 58.2 },
   { year: "2014", turnout: 66.4 },
   { year: "2019", turnout: 67.4 },
+  { year: "2023", turnout: 68.0 },
   { year: "2024", turnout: 68.5 },
   { year: "2025", turnout: null }, // Upcoming election
 ];
@@ -65,11 +66,62 @@ const partyPerformanceData = [
   { year: "2009", PartyA: 110, PartyB: 206, PartyC: 98, PartyD: 60, Others: 69 },
   { year: "2014", PartyA: 180, PartyB: 146, PartyC: 72, PartyD: 37, Others: 108 },
   { year: "2019", PartyA: 190, PartyB: 158, PartyC: 84, PartyD: 42, Others: 69 },
+  { year: "2023", PartyA: 193, PartyB: 155, PartyC: 88, PartyD: 44, Others: 63 },
   { year: "2024", PartyA: 195, PartyB: 150, PartyC: 90, PartyD: 45, Others: 63 },
   { year: "2025", PartyA: null, PartyB: null, PartyC: null, PartyD: null, Others: null }, // Upcoming election
 ];
 
-// Mock state-specific election data
+// Mock state-specific election data for each year
+const yearData = {
+  "2023": {
+    all: {
+      turnout: 68.0,
+      turnoutChange: 0.6,
+      seatsDeclared: 543,
+      totalSeats: 543,
+      voteShare: {
+        PartyA: 36,
+        PartyB: 30,
+        PartyC: 17,
+        PartyD: 9,
+        Others: 8,
+      },
+      partyResults: [
+        { party: "PartyA", seatsWon: 193, voteShare: 36, change: 3 },
+        { party: "PartyB", seatsWon: 155, voteShare: 30, change: -3 },
+        { party: "PartyC", seatsWon: 88, voteShare: 17, change: 4 },
+        { party: "PartyD", seatsWon: 44, voteShare: 9, change: 2 },
+        { party: "Others", seatsWon: 63, voteShare: 8, change: -6 },
+      ],
+    },
+    // ... other state data for 2023 would be here
+  },
+  "2024": {
+    all: {
+      turnout: 68.5,
+      turnoutChange: 0.5,
+      seatsDeclared: 543,
+      totalSeats: 543,
+      voteShare: {
+        PartyA: 37,
+        PartyB: 28,
+        PartyC: 18,
+        PartyD: 9,
+        Others: 8,
+      },
+      partyResults: [
+        { party: "PartyA", seatsWon: 195, voteShare: 37, change: 2 },
+        { party: "PartyB", seatsWon: 150, voteShare: 28, change: -5 },
+        { party: "PartyC", seatsWon: 90, voteShare: 18, change: 2 },
+        { party: "PartyD", seatsWon: 45, voteShare: 9, change: 1 },
+        { party: "Others", seatsWon: 63, voteShare: 8, change: 0 },
+      ],
+    },
+    // ... other state data for 2024 would be here
+  },
+};
+
+// Include the yearData in stateElectionData
 const stateElectionData = {
   all: {
     turnout: 67.2,
@@ -91,86 +143,7 @@ const stateElectionData = {
       { party: "Others", seatsWon: 48, voteShare: 7, change: -2 },
     ],
   },
-  ap: {
-    turnout: 79.8,
-    turnoutChange: 3.6,
-    seatsDeclared: 25,
-    totalSeats: 25,
-    voteShare: {
-      PartyA: 22,
-      PartyB: 48,
-      PartyC: 15,
-      PartyD: 10,
-      Others: 5,
-    },
-    partyResults: [
-      { party: "PartyA", seatsWon: 5, voteShare: 22, change: -3 },
-      { party: "PartyB", seatsWon: 14, voteShare: 48, change: 6 },
-      { party: "PartyC", seatsWon: 4, voteShare: 15, change: 1 },
-      { party: "PartyD", seatsWon: 2, voteShare: 10, change: -2 },
-      { party: "Others", seatsWon: 0, voteShare: 5, change: -2 },
-    ],
-  },
-  ar: {
-    turnout: 71.2,
-    turnoutChange: 1.2,
-    seatsDeclared: 2,
-    totalSeats: 2,
-    voteShare: {
-      PartyA: 55,
-      PartyB: 15,
-      PartyC: 20,
-      PartyD: 8,
-      Others: 2,
-    },
-    partyResults: [
-      { party: "PartyA", seatsWon: 2, voteShare: 55, change: 1 },
-      { party: "PartyB", seatsWon: 0, voteShare: 15, change: 0 },
-      { party: "PartyC", seatsWon: 0, voteShare: 20, change: -1 },
-      { party: "PartyD", seatsWon: 0, voteShare: 8, change: 0 },
-      { party: "Others", seatsWon: 0, voteShare: 2, change: 0 },
-    ],
-  },
-  as: {
-    turnout: 82.5,
-    turnoutChange: 5.7,
-    seatsDeclared: 14,
-    totalSeats: 14,
-    voteShare: {
-      PartyA: 42,
-      PartyB: 33,
-      PartyC: 12,
-      PartyD: 5,
-      Others: 8,
-    },
-    partyResults: [
-      { party: "PartyA", seatsWon: 8, voteShare: 42, change: 2 },
-      { party: "PartyB", seatsWon: 4, voteShare: 33, change: -1 },
-      { party: "PartyC", seatsWon: 1, voteShare: 12, change: -1 },
-      { party: "PartyD", seatsWon: 0, voteShare: 5, change: 0 },
-      { party: "Others", seatsWon: 1, voteShare: 8, change: 0 },
-    ],
-  },
-  br: {
-    turnout: 62.9,
-    turnoutChange: -1.8,
-    seatsDeclared: 40,
-    totalSeats: 40,
-    voteShare: {
-      PartyA: 38,
-      PartyB: 36,
-      PartyC: 12,
-      PartyD: 8,
-      Others: 6,
-    },
-    partyResults: [
-      { party: "PartyA", seatsWon: 18, voteShare: 38, change: -2 },
-      { party: "PartyB", seatsWon: 16, voteShare: 36, change: 3 },
-      { party: "PartyC", seatsWon: 3, voteShare: 12, change: -1 },
-      { party: "PartyD", seatsWon: 2, voteShare: 8, change: 0 },
-      { party: "Others", seatsWon: 1, voteShare: 6, change: 0 },
-    ],
-  },
+  // ... keep existing code (other state-specific election data)
 };
 
 // Mock constituency data by state
@@ -347,14 +320,22 @@ const Results = () => {
   const [currentData, setCurrentData] = useState(stateElectionData.all);
   const [currentConstituencyData, setCurrentConstituencyData] = useState(constituencyData.all);
 
-  // Update data when state selection changes
+  // Update data when state selection or year changes
   useEffect(() => {
-    const stateData = stateElectionData[selectedState as keyof typeof stateElectionData] || stateElectionData.all;
+    let stateData;
+    
+    // Check if data exists for the selected year
+    if (selectedYear === "2023" || selectedYear === "2024") {
+      stateData = yearData[selectedYear]?.all || stateElectionData.all;
+    } else {
+      stateData = stateElectionData[selectedState as keyof typeof stateElectionData] || stateElectionData.all;
+    }
+    
     const stateConstituencyData = constituencyData[selectedState as keyof typeof constituencyData] || constituencyData.all;
     
     setCurrentData(stateData);
     setCurrentConstituencyData(stateConstituencyData);
-  }, [selectedState]);
+  }, [selectedState, selectedYear]);
 
   const states = [
     { value: "all", label: "All States" },
