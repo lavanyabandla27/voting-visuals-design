@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import {
   BarChart3,
@@ -8,6 +7,7 @@ import {
   Filter,
   Map as MapIcon,
   PieChart,
+  TrendingUp,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Footer from "@/components/layout/Footer";
@@ -25,6 +25,22 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart as RPieChart,
+  Pie,
+  Cell,
+} from "recharts";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 // Mock data for charts
 const partyColors = {
@@ -34,6 +50,22 @@ const partyColors = {
   PartyD: "#ffd166",
   Others: "#8d99ae",
 };
+
+// Historical turnout data
+const historicalTurnoutData = [
+  { year: "2009", turnout: 58.2 },
+  { year: "2014", turnout: 66.4 },
+  { year: "2019", turnout: 67.4 },
+  { year: "2025", turnout: null }, // Upcoming election
+];
+
+// Party performance history
+const partyPerformanceData = [
+  { year: "2009", PartyA: 110, PartyB: 206, PartyC: 98, PartyD: 60, Others: 69 },
+  { year: "2014", PartyA: 180, PartyB: 146, PartyC: 72, PartyD: 37, Others: 108 },
+  { year: "2019", PartyA: 190, PartyB: 158, PartyC: 84, PartyD: 42, Others: 69 },
+  { year: "2025", PartyA: null, PartyB: null, PartyC: null, PartyD: null, Others: null }, // Upcoming election
+];
 
 // Mock state-specific election data
 const stateElectionData = {
@@ -309,7 +341,7 @@ const constituencyData = {
 
 const Results = () => {
   const [selectedState, setSelectedState] = useState<string>("all");
-  const [selectedYear, setSelectedYear] = useState<string>("2024");
+  const [selectedYear, setSelectedYear] = useState<string>("2025");
   const [currentData, setCurrentData] = useState(stateElectionData.all);
   const [currentConstituencyData, setCurrentConstituencyData] = useState(constituencyData.all);
 
@@ -331,7 +363,7 @@ const Results = () => {
   ];
 
   const years = [
-    { value: "2024", label: "2024" },
+    { value: "2025", label: "2025" },
     { value: "2019", label: "2019" },
     { value: "2014", label: "2014" },
     { value: "2009", label: "2009" },
@@ -679,21 +711,80 @@ const MapSection = () => {
         </TabsContent>
         <TabsContent value="chart">
           <GlassCard animateOnScroll={false}>
-            <div className="h-[400px] flex items-center justify-center">
-              <p className="text-muted-foreground">
-                Bar chart visualization would be displayed here <br />
-                (Requires chart.js or recharts integration)
-              </p>
+            <div className="h-[400px] p-4">
+              <h3 className="text-lg font-medium mb-4">Vote Share by Party (%)</h3>
+              <ResponsiveContainer width="100%" height="90%">
+                <BarChart
+                  data={[
+                    { name: "PartyA", value: 37 },
+                    { name: "PartyB", value: 29 },
+                    { name: "PartyC", value: 18 },
+                    { name: "PartyD", value: 9 },
+                    { name: "Others", value: 7 },
+                  ]}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="value" name="Vote Share (%)">
+                    {[
+                      { name: "PartyA", value: 37 },
+                      { name: "PartyB", value: 29 },
+                      { name: "PartyC", value: 18 },
+                      { name: "PartyD", value: 9 },
+                      { name: "Others", value: 7 },
+                    ].map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={partyColors[entry.name as keyof typeof partyColors]}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </GlassCard>
         </TabsContent>
         <TabsContent value="pie">
           <GlassCard animateOnScroll={false}>
-            <div className="h-[400px] flex items-center justify-center">
-              <p className="text-muted-foreground">
-                Pie chart visualization would be displayed here <br />
-                (Requires chart.js or recharts integration)
-              </p>
+            <div className="h-[400px] p-4">
+              <h3 className="text-lg font-medium mb-4">Seat Distribution</h3>
+              <ResponsiveContainer width="100%" height="90%">
+                <RPieChart>
+                  <Pie
+                    data={[
+                      { name: "PartyA", value: 200 },
+                      { name: "PartyB", value: 155 },
+                      { name: "PartyC", value: 95 },
+                      { name: "PartyD", value: 45 },
+                      { name: "Others", value: 48 },
+                    ]}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={true}
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={120}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {[
+                      { name: "PartyA", value: 200 },
+                      { name: "PartyB", value: 155 },
+                      { name: "PartyC", value: 95 },
+                      { name: "PartyD", value: 45 },
+                      { name: "Others", value: 48 },
+                    ].map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={partyColors[entry.name as keyof typeof partyColors]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => [`${value} seats`, 'Seats Won']} />
+                </RPieChart>
+              </ResponsiveContainer>
             </div>
           </GlassCard>
         </TabsContent>
@@ -714,11 +805,30 @@ const TrendsSection = () => {
             <Calendar size={20} />
             Voter Turnout Trends
           </h3>
-          <div className="h-[250px] flex items-center justify-center border border-border/50 rounded-md">
-            <p className="text-muted-foreground text-center">
-              Historical turnout chart would be displayed here <br />
-              (Requires chart.js or recharts integration)
-            </p>
+          <div className="h-[250px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={historicalTurnoutData}
+                margin={{ top: 10, right: 30, left: 0, bottom: 10 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="year" />
+                <YAxis domain={[50, 80]} />
+                <Tooltip
+                  formatter={(value) => [value ? `${value}%` : 'Upcoming', 'Turnout']}
+                  labelFormatter={(label) => `Year: ${label}`}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="turnout"
+                  stroke="#4361ee"
+                  strokeWidth={2}
+                  dot={{ r: 4 }}
+                  activeDot={{ r: 6 }}
+                  name="Voter Turnout (%)"
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </GlassCard>
 
@@ -727,60 +837,31 @@ const TrendsSection = () => {
             <BarChart3 size={20} />
             Party Performance Comparison
           </h3>
-          <div className="h-[250px] flex items-center justify-center border border-border/50 rounded-md">
-            <p className="text-muted-foreground text-center">
-              Party performance chart would be displayed here <br />
-              (Requires chart.js or recharts integration)
-            </p>
-          </div>
-        </GlassCard>
-      </div>
-
-      <div className="mt-12">
-        <GlassCard>
-          <h3 className="text-xl font-medium mb-4">Key Insights</h3>
-          <ul className="space-y-4">
-            <li className="flex gap-3">
-              <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                1
-              </div>
-              <div>
-                <p className="font-medium">Increased Voter Participation</p>
-                <p className="text-muted-foreground">
-                  Voter turnout has shown a steady increase over the last three
-                  election cycles, with a 4.2% rise since 2014.
-                </p>
-              </div>
-            </li>
-            <li className="flex gap-3">
-              <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                2
-              </div>
-              <div>
-                <p className="font-medium">Shift in Regional Dynamics</p>
-                <p className="text-muted-foreground">
-                  Southern states have shown significant shifts in voting
-                  patterns, with traditional strongholds being challenged.
-                </p>
-              </div>
-            </li>
-            <li className="flex gap-3">
-              <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                3
-              </div>
-              <div>
-                <p className="font-medium">Urban-Rural Divide</p>
-                <p className="text-muted-foreground">
-                  The gap between urban and rural voting preferences has
-                  narrowed compared to previous elections.
-                </p>
-              </div>
-            </li>
-          </ul>
-        </GlassCard>
-      </div>
-    </InfoSection>
-  );
-};
-
-export default Results;
+          <div className="h-[250px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={partyPerformanceData}
+                margin={{ top: 10, right: 30, left: 0, bottom: 10 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="year" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar
+                  dataKey="PartyA"
+                  name="Party A"
+                  fill={partyColors.PartyA}
+                  stackId="a"
+                  barSize={24}
+                />
+                <Bar
+                  dataKey="PartyB"
+                  name="Party B"
+                  fill={partyColors.PartyB}
+                  stackId="a"
+                />
+                <Bar
+                  dataKey="PartyC"
+                  name="Party C"
+                  fill={
