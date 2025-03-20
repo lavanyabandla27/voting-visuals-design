@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import {
   BarChart3,
@@ -368,7 +369,7 @@ const Results = () => {
   return (
     <>
       <Navbar />
-      <main className="pt-20">
+      <main className="min-h-screen pt-20">
         <HeroSection />
         <ResultsSection
           selectedState={selectedState}
