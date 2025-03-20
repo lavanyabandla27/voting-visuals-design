@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import {
   BarChart3,
@@ -57,6 +56,7 @@ const historicalTurnoutData = [
   { year: "2009", turnout: 58.2 },
   { year: "2014", turnout: 66.4 },
   { year: "2019", turnout: 67.4 },
+  { year: "2024", turnout: 68.5 },
   { year: "2025", turnout: null }, // Upcoming election
 ];
 
@@ -65,6 +65,7 @@ const partyPerformanceData = [
   { year: "2009", PartyA: 110, PartyB: 206, PartyC: 98, PartyD: 60, Others: 69 },
   { year: "2014", PartyA: 180, PartyB: 146, PartyC: 72, PartyD: 37, Others: 108 },
   { year: "2019", PartyA: 190, PartyB: 158, PartyC: 84, PartyD: 42, Others: 69 },
+  { year: "2024", PartyA: 195, PartyB: 150, PartyC: 90, PartyD: 45, Others: 63 },
   { year: "2025", PartyA: null, PartyB: null, PartyC: null, PartyD: null, Others: null }, // Upcoming election
 ];
 
@@ -365,8 +366,21 @@ const Results = () => {
 
   const years = [
     { value: "2025", label: "2025" },
+    { value: "2024", label: "2024" },
+    { value: "2023", label: "2023" },
+    { value: "2022", label: "2022" },
+    { value: "2021", label: "2021" },
+    { value: "2020", label: "2020" },
     { value: "2019", label: "2019" },
+    { value: "2018", label: "2018" },
+    { value: "2017", label: "2017" },
+    { value: "2016", label: "2016" },
+    { value: "2015", label: "2015" },
     { value: "2014", label: "2014" },
+    { value: "2013", label: "2013" },
+    { value: "2012", label: "2012" },
+    { value: "2011", label: "2011" },
+    { value: "2010", label: "2010" },
     { value: "2009", label: "2009" },
   ];
 

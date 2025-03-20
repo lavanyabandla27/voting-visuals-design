@@ -44,16 +44,20 @@ const Index = () => {
 
 const HeroSection = () => {
   return (
-    <AnimatedHero className="pt-20 bg-gradient-to-b from-primary/5 to-background">
+    <AnimatedHero 
+      className="pt-20"
+      backgroundImage="/election-background.jpg"
+      overlay={true}
+    >
       <div className="max-w-3xl mx-auto text-center pt-10 md:pt-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-1.5 bg-primary/10 border border-primary/20 px-3 py-1 rounded-full text-sm font-medium mb-6"
+          className="inline-flex items-center gap-1.5 bg-primary/20 backdrop-blur-md border border-primary/30 px-3 py-1 rounded-full text-sm font-medium mb-6"
         >
           <Vote className="w-4 h-4 mr-1" />
-          <span>Election 2024</span>
+          <span>Election 2025</span>
         </motion.div>
 
         <motion.h1
@@ -170,20 +174,20 @@ const HeroSection = () => {
 
 const ElectionCountdownSection = () => {
   return (
-    <section className="bg-primary py-10 text-white">
+    <section className="bg-gradient-to-r from-primary to-primary/80 py-10 text-white">
       <div className="container">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-4">
             <Calendar className="h-8 w-8" />
             <div>
               <h3 className="text-xl font-medium">Election Day</h3>
-              <p className="text-primary-foreground/80">April - May 2024</p>
+              <p className="text-primary-foreground/80">April - May 2025</p>
             </div>
           </div>
           
           <div className="grid grid-cols-4 gap-4">
             {[
-              { value: "18", label: "Days" },
+              { value: "152", label: "Days" },
               { value: "06", label: "Hours" },
               { value: "42", label: "Minutes" },
               { value: "23", label: "Seconds" },
@@ -306,27 +310,27 @@ const UpcomingElectionsSection = () => {
   const elections = [
     {
       state: "General Elections",
-      date: "April - May 2024",
+      date: "April - May 2025",
       status: "Upcoming",
-      days: "18 days remaining",
+      days: "152 days remaining",
     },
     {
       state: "Maharashtra",
       date: "November 2024",
       status: "Scheduled",
-      days: "205 days remaining",
+      days: "47 days remaining",
     },
     {
       state: "Haryana",
       date: "October 2024",
       status: "Scheduled",
-      days: "175 days remaining",
+      days: "17 days remaining",
     },
     {
       state: "Jharkhand",
       date: "December 2024",
       status: "Scheduled",
-      days: "236 days remaining",
+      days: "78 days remaining",
     },
   ];
 
