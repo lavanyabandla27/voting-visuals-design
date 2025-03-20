@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import {
   BarChart3,
@@ -864,4 +865,28 @@ const TrendsSection = () => {
                 <Bar
                   dataKey="PartyC"
                   name="Party C"
-                  fill={
+                  fill={partyColors.PartyC}
+                  stackId="a"
+                />
+                <Bar
+                  dataKey="PartyD"
+                  name="Party D"
+                  fill={partyColors.PartyD}
+                  stackId="a"
+                />
+                <Bar
+                  dataKey="Others"
+                  name="Others"
+                  fill={partyColors.Others}
+                  stackId="a"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </GlassCard>
+      </div>
+    </InfoSection>
+  );
+};
+
+export default Results;
